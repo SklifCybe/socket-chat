@@ -9,17 +9,23 @@ let users: Array<user> = [];
 type addUserReturn = {
   user?: user | null;
   error?: string | null;
-}
+};
 
-export const addUser = (user: user): addUserReturn => {
-  const name: string = user.name.trim();
-  const room: string = user.room.trim();
+export const addUser = (userData: user, id: string): addUserReturn => {
+  const name: string = userData.name.trim();
+  const room: string = userData.room.trim();
 
   const isMatch: boolean = !!users.find((user) => user.name === name && user.room === room);
 
   if (isMatch) {
     return { error: 'Username is exist.', user: null };
   }
+
+  const user = {
+    id,
+    name: userData.name,
+    room: userData.room,
+  };
 
   users.push(user);
   return { user, error: null };

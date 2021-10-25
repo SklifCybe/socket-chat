@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import http from 'http';
 
 import mainRouter from './routes';
-import { addUser, getUser, user } from './users';
+import { addUser, getUser, user, removeUser } from './users';
 
 const app = express();
 const server = http.createServer(app);
@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
   console.log('User has been connected.');
 
   socket.on('ROOM:JOIN', (userData: user, callback: (error: string) => void) => {
-    const { error, user } = addUser(userData);
+    const { error, user } = addUser(userData, socket.id);
 
     if (error) {
       return callback(error);
@@ -40,16 +40,17 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('ROOM:SEND_MESSAGE', (message) => {
+  socket.on('ROOM:SEND_MESSAGE', (message: string, callback: () => void) => {
     const user = getUser(socket.id);
 
     if (user) {
       io.to(user.room).emit('ROOM:MESSAGE', {
         user: user.name,
-        text: message
+        text: message,
       });
-    }    
-    
+    }
+
+    callback();
   });
 
   socket.on('disconnect', () => {
