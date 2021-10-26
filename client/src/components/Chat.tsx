@@ -1,10 +1,21 @@
-import React, { FC, ReactElement, useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+} from 'react';
 import { parse } from 'query-string';
 import { Location } from 'history';
 import io, { Socket } from 'socket.io-client';
-import { AppBar, Container, Toolbar, IconButton, Typography, Button } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import ClearIcon from '@mui/icons-material/Clear';
+import { Container } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+
+import { ChatHeader } from './ChatHeader';
+import { ChatInput } from './ChatInput';
+import { Messages } from './Messages';
 
 let socket: Socket;
 
@@ -17,12 +28,13 @@ type parseLocation = {
   room: string;
 };
 
-type message = {
+export type message = {
   user: string;
   text: string;
 };
 
 export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
+  const history = useHistory();
   const [name, setName] = useState<string | null | string[]>('');
   const [roomID, setRoomID] = useState('');
   const [message, setMessage] = useState('');
@@ -36,6 +48,7 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
 
     socket.emit('ROOM:JOIN', { name, room }, () => {
       alert(`This name=${name} is exist`);
+      history.push('/');
       socket.off();
     });
 
@@ -53,12 +66,18 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
     });
   }, []);
 
-  const handlerMessage = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
-  const sendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+  const sendMessageEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && message) {
+      socket.emit('ROOM:SEND_MESSAGE', message, () => setMessage(''));
+    }
+  };
+
+  const sendMessageBtn = () => {
+    if (message) {
       socket.emit('ROOM:SEND_MESSAGE', message, () => setMessage(''));
     }
   };
@@ -76,22 +95,13 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
         padding: '0 !important',
         borderRadius: '10px !important',
       }}>
-      <AppBar
-        position="static"
-        sx={{
-          width: '100%',
-          borderTopLeftRadius: '10px !important',
-          borderTopRightRadius: '10px !important',
-        }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Room
-          </Typography>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu">
-            <ClearIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <ChatHeader history={history} roomName={roomID} />
+      <Messages messages={messages} />
+      <ChatInput
+        message={message}
+        sendMessage={{ sendMessageEnter, sendMessageBtn }}
+        handleMessage={handleMessage}
+      />
     </Container>
   );
 };

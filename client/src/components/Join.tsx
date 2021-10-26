@@ -34,22 +34,8 @@ export const Join: FC = (): ReactElement => {
       <Typography component="h1" variant="h5">
         Join in Chat
       </Typography>
-      <TextField
-        margin="normal"
-        fullWidth
-        label="User Name"
-        inputProps={{ style: { color: 'white' } }}
-        value={name}
-        onChange={handlename}
-      />
-      <TextField
-        margin="normal"
-        fullWidth
-        label="Room ID"
-        inputProps={{ style: { color: 'white' } }}
-        value={roomID}
-        onChange={handleRoomID}
-      />
+      <TextField margin="normal" fullWidth label="User Name" value={name} onChange={handlename} />
+      <TextField margin="normal" fullWidth label="Room ID" value={roomID} onChange={handleRoomID} />
       <Button
         type="submit"
         fullWidth
