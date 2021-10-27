@@ -28,11 +28,11 @@ export const ChatInput: FC<ChatInputProps> = ({
       }}>
       <InputBase
         sx={{ mt: '20x', ml: '20px', flex: 1 }}
-        placeholder="Type a some text..."
-        inputProps={{ 'aria-label': 'search google maps' }}
+        placeholder="Type a message..."
         value={message}
         onChange={handleMessage}
         onKeyPress={sendMessageEnter}
+        autoFocus
       />
       <Button
         onClick={sendMessageBtn}

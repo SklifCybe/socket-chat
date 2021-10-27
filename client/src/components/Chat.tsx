@@ -1,12 +1,4 @@
-import {
-  FC,
-  ReactElement,
-  useState,
-  useEffect,
-  ChangeEvent,
-  KeyboardEvent,
-  MouseEvent,
-} from 'react';
+import { FC, ReactElement, useState, useEffect, ChangeEvent, KeyboardEvent, useRef } from 'react';
 import { parse } from 'query-string';
 import { Location } from 'history';
 import io, { Socket } from 'socket.io-client';
@@ -15,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
-import { Messages } from './Messages';
+import { Messager } from './Messager';
 
 let socket: Socket;
 
@@ -35,10 +27,11 @@ export type message = {
 
 export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
   const history = useHistory();
-  const [name, setName] = useState<string | null | string[]>('');
+  const [name, setName] = useState('');
   const [roomID, setRoomID] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<message>>([]);
+  const messageRef = useRef<HTMLInputElement>(null);
   const ENDPOINT = 'http://localhost:5050';
 
   useEffect(() => {
@@ -65,6 +58,12 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
       setMessages((prev) => [...prev, message]);
     });
   }, []);
+
+  useEffect(() => {
+    if (messageRef) {
+      messageRef?.current?.scrollTo(0, 99999);
+    }
+  }, [messages]);
 
   const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
@@ -96,7 +95,7 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
         borderRadius: '10px !important',
       }}>
       <ChatHeader history={history} roomName={roomID} />
-      <Messages messages={messages} />
+      <Messager messages={messages} name={name} messageRef={messageRef} />
       <ChatInput
         message={message}
         sendMessage={{ sendMessageEnter, sendMessageBtn }}

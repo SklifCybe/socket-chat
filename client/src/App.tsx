@@ -8,9 +8,9 @@ import { Join } from './components/Join';
 export const App: FC = (): ReactElement => {
   return (
     <>
-      <CssBaseline />
-      <Route path="/" exact component={Join} />
-      <Route path="/chat" component={Chat} />
+        <CssBaseline />
+        <Route path="/" exact component={Join} />
+        <Route path="/chat" component={Chat} />
     </>
   );
 };

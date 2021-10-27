@@ -1,18 +1,21 @@
-import { FC, ReactElement } from 'react';
-import { Container, Box } from '@mui/material';
+import { FC, ReactElement, MutableRefObject } from 'react';
+import { Box } from '@mui/material';
 
 import { Message } from './Message';
 
 import { message } from './Chat';
 
-type MessagesProps = {
+type MessagerProps = {
   messages: Array<message>;
+  name: string;
+  messageRef: MutableRefObject<null | HTMLInputElement>;
 };
 
-export const Messages: FC<MessagesProps> = ({ messages }): ReactElement => {
+export const Messager: FC<MessagerProps> = ({ messages, name, messageRef }): ReactElement => {
   return (
     <Box
       component="div"
+      ref={messageRef}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -21,9 +24,10 @@ export const Messages: FC<MessagesProps> = ({ messages }): ReactElement => {
         border: 'solid #888',
         borderWidth: '0 1px 0 1px',
         padding: '1rem',
+        overflowY: 'auto',
       }}>
       {messages.map((message) => (
-        <Message message={message} />
+        <Message message={message} name={name} />
       ))}
     </Box>
   );
