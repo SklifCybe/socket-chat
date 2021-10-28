@@ -5,7 +5,11 @@
   "main": "app.ts",
   "scripts": {
     "build": "tsc --project ./",
-    "start": "nodemon app.ts"
+    "build-client": "cd ../client && yarn build",
+    "install-client": "cd ../client && yarn i",
+    "heroku-postbuild": "yarn install-client && yarn build-client",
+    "start": "node app.ts",
+    "dev-start": "nodemon app.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +17,7 @@
   "dependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.4",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "socket.io": "^4.3.1",
     "ts-node": "^10.4.0",

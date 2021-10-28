@@ -1,21 +1,25 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
+import cors from 'cors';
+import { config } from 'dotenv';
 
 import mainRouter from './routes';
 import { addUser, getUser, user, removeUser } from './users';
 
 const app = express();
+config();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     methods: ['GET', 'POST'],
   },
 });
 const PORT = process.env.PORT || 5050;
 
 app.use('/', mainRouter);
+app.use(cors());
 
 io.on('connection', (socket) => {
   console.log('User has been connected.');
@@ -66,6 +70,10 @@ io.on('connection', (socket) => {
     console.log('User had disconnect');
   });
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../client/build'))
+}
 
 server.listen(PORT, () => {
   console.log(`Server has been started on ${PORT}`);
