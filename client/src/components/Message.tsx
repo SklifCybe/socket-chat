@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Grid, Typography, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC, ReactElement } from 'react';
 
@@ -9,10 +9,11 @@ type MessageProps = {
   name: string;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   message: {
     display: 'flex',
     alignItems: 'center',
+    color: '#000',
   },
   messageText: {
     wordBreak: 'break-word',
@@ -21,16 +22,17 @@ const useStyles = makeStyles({
     borderRadius: '10px',
   },
   myMessageColor: {
-    backgroundColor: '#2C6DFF',
+    backgroundColor: theme.palette.secondary.main,
     color: '#fff',
   },
   notMyMessageColor: {
-    backgroundColor: '#F2F1F2',
+    backgroundColor: theme.palette.secondary.light,
+    color: '#000',
   },
   notMyMessage: {
     justifyContent: 'right',
   },
-});
+}));
 
 export const Message: FC<MessageProps> = ({ message, name }): ReactElement => {
   const classes = useStyles();

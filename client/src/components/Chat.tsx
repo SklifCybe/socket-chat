@@ -86,7 +86,6 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
       component="main"
       maxWidth="xs"
       sx={{
-        marginTop: 8,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

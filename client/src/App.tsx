@@ -1,16 +1,22 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import { Route } from 'react-router-dom';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 
 import { Chat } from './components/Chat';
 import { Join } from './components/Join';
+import { ToggleTheme } from './components/ToggleTheme';
+
+import { lightTheme, darkTheme } from './themes';
 
 export const App: FC = (): ReactElement => {
+  const [theme, setTheme] = useState(false);
+
   return (
-    <>
-        <CssBaseline />
-        <Route path="/" exact component={Join} />
-        <Route path="/chat" component={Chat} />
-    </>
+    <ThemeProvider theme={theme ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <ToggleTheme theme={theme} setTheme={setTheme} />
+      <Route path="/" exact component={Join} />
+      <Route path="/chat" component={Chat} />
+    </ThemeProvider>
   );
 };
