@@ -4,7 +4,6 @@ import http from 'http';
 import cors from 'cors';
 import { config } from 'dotenv';
 
-import mainRouter from './routes';
 import { addUser, getUser, user, removeUser } from './users';
 
 const app = express();
@@ -18,7 +17,6 @@ const io = new Server(server, {
 });
 const PORT = process.env.PORT || 5050;
 
-app.use('/', mainRouter);
 app.use(cors());
 
 io.on('connection', (socket) => {
