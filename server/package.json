@@ -8,7 +8,7 @@
     "build-client": "cd ../client && yarn build",
     "install-client": "cd ../client && yarn i",
     "heroku-postbuild": "yarn install-client && yarn build-client",
-    "start": "node app.ts",
+    "start": "node build/app.js",
     "dev-start": "nodemon app.ts"
   },
   "keywords": [],
