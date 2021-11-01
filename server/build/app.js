@@ -8,9 +8,11 @@ const socket_io_1 = require("socket.io");
 const http_1 = __importDefault(require("http"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = require("dotenv");
-const routes_1 = __importDefault(require("./routes"));
 const users_1 = require("./users");
+const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use('/', routes_1.default);
 (0, dotenv_1.config)();
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
@@ -20,8 +22,6 @@ const io = new socket_io_1.Server(server, {
     },
 });
 const PORT = process.env.PORT || 5050;
-app.use('/', routes_1.default);
-app.use((0, cors_1.default)());
 io.on('connection', (socket) => {
     console.log('User has been connected.');
     socket.on('ROOM:JOIN', (userData, callback) => {
@@ -61,9 +61,6 @@ io.on('connection', (socket) => {
         console.log('User had disconnect');
     });
 });
-if (process.env.NODE_ENV === 'production') {
-    app.use(express_1.default.static('../client/build'));
-}
 server.listen(PORT, () => {
     console.log(`Server has been started on ${PORT}`);
 });

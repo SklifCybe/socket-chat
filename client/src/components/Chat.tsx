@@ -32,7 +32,7 @@ export const Chat: FC<ChatProps> = ({ location }): ReactElement => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<message>>([]);
   const messageRef = useRef<HTMLInputElement>(null);
-  const ENDPOINT = 'http://localhost:5050';
+  const ENDPOINT = process.env.REACT_APP_BACKEND_URI_DEV || 'http://localhost:5050';
 
   useEffect(() => {
     const { name, room } = parse(location.search) as parseLocation;

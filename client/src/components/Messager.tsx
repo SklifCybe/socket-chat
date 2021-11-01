@@ -26,8 +26,8 @@ export const Messager: FC<MessagerProps> = ({ messages, name, messageRef }): Rea
         padding: '1rem',
         overflowY: 'auto',
       }}>
-      {messages.map((message) => (
-        <Message message={message} name={name} />
+      {messages.map((message, index: number) => (
+        <Message key={index} message={message} name={name} />
       ))}
     </Box>
   );
